@@ -1,9 +1,13 @@
 import express from "express";
-import { router as authRouter } from "./routes/user.js";
 import cors from "cors";
+import * as dotenv from "dotenv";
+import { router as authRouter } from "./routes/user.js";
+import { connectDB } from "./db/connect.js";
 
 const PORT = process.env.PORT || 8000;
 const HOST = "localhost";
+
+dotenv.config();
 
 const app = express();
 
@@ -17,6 +21,14 @@ app.get("/", (req, res) => {
 
 app.use("/login", authRouter);
 
-app.listen(PORT, () => {
-  console.log(`Server is listening on ${HOST}:${PORT}...`);
-});
+const start = async () => {
+  try {
+    await connectDB(process.env.MONGO_URI);
+    app.listen(PORT, () => {
+      console.log(`Server is listening on ${HOST}:${PORT}...`);
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
+start();
