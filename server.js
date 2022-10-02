@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
 import { router as authRouter } from "./routes/login.js";
+import { router as userRouter } from "./routes/user.js";
 import { connectDB } from "./db/connect.js";
 
 const PORT = process.env.PORT || 8000;
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/login", authRouter);
+app.use("/user", userRouter);
 
 const start = async () => {
   try {
