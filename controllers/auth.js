@@ -4,5 +4,6 @@ export const auth = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   const validatePassword = await user.comparePasswords(password);
-  res.status(200);
+  if (validatePassword) req.session.user = user.name;
+  res.status(200).json({ status: 200, message: "Success" });
 };

@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import * as dotenv from "dotenv";
+import * as exSession from "express-session";
+import * as cookieParser from "cookie-parser";
 import { router as authRouter } from "./routes/login.js";
 import { router as userRouter } from "./routes/user.js";
 import { connectDB } from "./db/connect.js";
@@ -11,6 +13,18 @@ const HOST = "localhost";
 dotenv.config();
 
 const app = express();
+
+const sessionData = {
+  secret: "documentmanagementsystem",
+  cookie: {},
+  proxy: true,
+  resave: true,
+  saveUninitialized: true,
+};
+
+app.use(exSession.default(sessionData));
+
+app.use(cookieParser.default());
 
 app.use(cors());
 
