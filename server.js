@@ -17,7 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("<h1>Test</h1>");
+  res.send("<h1>Document Management System</h1>");
 });
 
 app.use("/login", authRouter);
