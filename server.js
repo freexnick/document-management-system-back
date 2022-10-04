@@ -5,6 +5,8 @@ import * as exSession from "express-session";
 import * as cookieParser from "cookie-parser";
 import { router as authRouter } from "./routes/login.js";
 import { router as userRouter } from "./routes/user.js";
+import { router as documentRouter } from "./routes/document.js";
+import { router as uploadRouter } from "./routes/upload.js";
 import { connectDB } from "./db/connect.js";
 
 const PORT = process.env.PORT || 8000;
@@ -36,6 +38,8 @@ app.get("/", (req, res) => {
 
 app.use("/login", authRouter);
 app.use("/user", userRouter);
+app.use("/documents", documentRouter);
+app.use("/upload", uploadRouter);
 
 const start = async () => {
   try {
