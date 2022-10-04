@@ -11,7 +11,8 @@ const getUsers = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const result = await User.findOne(req.body.email);
+  const { id: email } = req.params;
+  const result = await User.findOne({ email });
   res.status(200).json(result);
 };
 
