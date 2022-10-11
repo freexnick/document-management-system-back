@@ -6,7 +6,7 @@ const auth = async (req, res) => {
     const user = await User.findOne({ email });
     const validatePassword = await user?.comparePasswords(password);
     if (validatePassword) {
-      req.session.user = user?._id;
+      req.session.user = user._id;
       res.status(200).json(user);
     } else {
       res.status(401).json({ status: 401, message: "invalid credentials" });
@@ -16,11 +16,13 @@ const auth = async (req, res) => {
   }
 };
 
-const checkAuth = async (req, res, next) =>
+const checkAuth = async (req, res, next) => {
+  console.log(req.session);
   req.session.user?.length > 2 ? next() : res.redirect("/login");
+};
 
 const logout = async (req, res) => {
-  delete req.session?.user;
+  delete req.session.destroy();
   res.status(200).json({ status: 200, message: "Success" });
 };
 

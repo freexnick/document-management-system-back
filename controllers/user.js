@@ -11,7 +11,7 @@ const addUser = async (req, res) => {
 
 const getUsers = async (req, res) => {
   try {
-    await User.find();
+    const result = await User.find();
     res.status(200).json(result);
   } catch (e) {
     return res.status(400).json({ status: 400, message: e });
@@ -20,7 +20,7 @@ const getUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    await User.findOne({ _id: req.params.id });
+    const result = await User.findOne({ _id: req.params.id });
     res.status(200).json(result);
   } catch (e) {
     return res.status(400).json({ status: 400, message: e });
