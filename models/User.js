@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
     required: [true, "Please Provide Name"],
     minLength: 4,
     maxLength: 50,
+    unique: true,
   },
   role: {
     type: String,
@@ -28,7 +29,7 @@ const UserSchema = new mongoose.Schema({
     minLength: 8,
   },
   spaceUsed: Number,
-  spaceLimit: { type: Number, enum: 25000 },
+  spaceLimit: { type: Number, enum: 25 },
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -39,6 +40,10 @@ UserSchema.pre("save", async function () {
 
 UserSchema.methods.comparePasswords = async function (providedPassword) {
   return await bcrypt.compare(providedPassword, this.password);
+};
+
+UserSchema.methods.calculateSpaceLeft = async function (itemSpace) {
+  return this.spaceLimit - itemSpace > 0;
 };
 
 export const User = mongoose.model("User", UserSchema);

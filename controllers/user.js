@@ -2,7 +2,7 @@ import { User } from "../models/User.js";
 
 const addUser = async (req, res) => {
   await User.create(req.body);
-  res.status(200).json({ status: 200, message: "Success" });
+  res.status(201).json({ status: 201, message: "Success" });
 };
 
 const getUsers = async (req, res) => {
@@ -11,8 +11,7 @@ const getUsers = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const { id: email } = req.params;
-  const result = await User.findOne({ email });
+  const result = await User.findOne({ _id: req.params.id });
   res.status(200).json(result);
 };
 
