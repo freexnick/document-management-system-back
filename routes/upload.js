@@ -7,7 +7,10 @@ const STORAGE = multer.diskStorage({
     cb(null, "uploads");
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${req.params.id}-${file.originalname}`);
+    file.originalname = Buffer.from(file.originalname, "latin1").toString(
+      "utf8"
+    );
+    cb(null, `{${Date.now()}-${req.params.id}-${file.originalname}`);
   },
 });
 
