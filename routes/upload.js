@@ -1,10 +1,13 @@
 import express from "express";
 import * as multer from "multer";
+import { uploadFile } from "../controllers/document.js";
 
 const STORAGE = multer.diskStorage({
-  destination: "./uploads",
+  destination: (req, file, cb) => {
+    cb(null, "uploads");
+  },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+    cb(null, `${Date.now()}-${req.params.id}-${file.originalname}`);
   },
 });
 
@@ -15,10 +18,10 @@ const upload = multer.default({
 
 const router = express.Router();
 
-router.route("/");
+router.route("/").get();
 
 router
   .route("/:id")
-  .post(upload.single("file"), (req, res) => console.log(req.file, req.params));
+  .post(upload.single("file"), (req, res) => uploadFile(req, res));
 
 export { router };
