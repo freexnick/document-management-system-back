@@ -9,6 +9,7 @@ import { router as documentRouter } from "./routes/document.js";
 import { router as uploadRouter } from "./routes/upload.js";
 import { router as searchRouter } from "./routes/search.js";
 import { connectDB } from "./db/connect.js";
+import { checkAuth } from "./controllers/auth.js";
 
 const PORT = process.env.PORT || 8000;
 const HOST = "localhost";
@@ -33,15 +34,15 @@ app.use(cors());
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/", checkAuth, (req, res) => {
   res.send("<h1>Document Management System</h1>");
 });
 
 app.use("/login", authRouter);
-app.use("/user", userRouter);
-app.use("/documents", documentRouter);
-app.use("/upload", uploadRouter);
-app.use("/search", searchRouter);
+app.use("/user", checkAuth, userRouter);
+app.use("/documents", checkAuth, documentRouter);
+app.use("/upload", checkAuth, uploadRouter);
+app.use("/search", checkAuth, searchRouter);
 
 const start = async () => {
   try {
