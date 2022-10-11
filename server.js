@@ -7,6 +7,7 @@ import { router as authRouter } from "./routes/login.js";
 import { router as userRouter } from "./routes/user.js";
 import { router as documentRouter } from "./routes/document.js";
 import { router as uploadRouter } from "./routes/upload.js";
+import { router as searchRouter } from "./routes/search.js";
 import { connectDB } from "./db/connect.js";
 
 const PORT = process.env.PORT || 8000;
@@ -40,6 +41,7 @@ app.use("/login", authRouter);
 app.use("/user", userRouter);
 app.use("/documents", documentRouter);
 app.use("/upload", uploadRouter);
+app.use("/search", searchRouter);
 
 const start = async () => {
   try {
