@@ -30,7 +30,7 @@ const uploadFile = async (req, res) => {
 const getDocuments = async (req, res) => {
   try {
     const result = await Document.find();
-    if (result) res.status(200).json(result);
+    res.status(200).json(result);
   } catch (e) {
     return res.status(400).json({ status: 400, message: e });
   }

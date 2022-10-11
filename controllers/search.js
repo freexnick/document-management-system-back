@@ -10,8 +10,8 @@ const searchUser = async (req, res) => {
     data = { name: { $regex: reg } };
   }
   try {
-    const result = await User.find(data);
-    if (result) res.status(200).json(result);
+    await User.find(data);
+    res.status(200).json(result);
   } catch (e) {
     return res.status(400).json({ status: 400, message: e });
   }
@@ -20,8 +20,8 @@ const searchUser = async (req, res) => {
 const searchDocument = async (req, res) => {
   const reg = new RegExp(req.params.id, "i");
   try {
-    const result = await Document.find({ name: reg });
-    if (result) res.status(200).json(result);
+    await Document.find({ name: reg });
+    res.status(200).json(result);
   } catch (e) {
     return res.status(400).json({ status: 400, message: e });
   }
