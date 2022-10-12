@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import proxy from "express-http-proxy";
 import * as dotenv from "dotenv";
 import * as exSession from "express-session";
 import * as cookieParser from "cookie-parser";
@@ -22,15 +23,21 @@ const sessionData = {
   secret: "documentmanagementsystem",
   cookie: {},
   proxy: true,
-  resave: true,
-  saveUninitialized: true,
+  resave: false,
+  saveUninitialized: false,
+  secure: false,
+};
+
+const corsOptions = {
+  credentials: true,
+  origin: ["http://localhost:8000", "http://localhost:1234"],
 };
 
 app.use(exSession.default(sessionData));
 
 app.use(cookieParser.default());
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -38,11 +45,13 @@ app.get("/", checkAuth, (req, res) => {
   res.send("<h1>Document Management System</h1>");
 });
 
-app.use("/login", authRouter);
-app.use("/user", checkAuth, userRouter);
-app.use("/documents", checkAuth, documentRouter);
-app.use("/upload", checkAuth, uploadRouter);
-app.use("/search", checkAuth, searchRouter);
+app.use("/api/v1/login", authRouter);
+app.use("/api/v1/user", checkAuth, userRouter);
+app.use("/api/v1/documents", checkAuth, documentRouter);
+app.use("/api/v1/upload", checkAuth, uploadRouter);
+app.use("/api/v1/search", checkAuth, searchRouter);
+
+app.use(proxy("http://localhost:1234"));
 
 const start = async () => {
   try {
