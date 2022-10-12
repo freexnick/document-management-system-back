@@ -7,14 +7,14 @@ const uploadFile = async (req, res) => {
   const fileSize = req.file.size / 1024 ** 2;
   try {
     const user = await User.findByIdAndUpdate(
-      { _id: req.body.owner },
+      { _id: req.session.user._id },
       { $inc: { spaceUsed: +fileSize } }
     ).exec();
     if (user) {
       const result = await Document.create({
-        owner: req.body.owner,
+        owner: req.session.user._id,
         name: req.file.originalname,
-        email: req.body.email,
+        email: req.session.user.email,
         visibility: req.body.visibility,
         file: req.file.path,
         contentType: req.file.mimetype,
@@ -28,8 +28,21 @@ const uploadFile = async (req, res) => {
 };
 
 const getDocuments = async (req, res) => {
+  const userEmail =
+    req.session.user?.role === "admin"
+      ? null
+      : { email: req.session.user?.email };
   try {
-    const result = await Document.find();
+    const result = await Document.find(userEmail);
+    res.status(200).json(result);
+  } catch (e) {
+    return res.status(400).json({ status: 400, message: e });
+  }
+};
+
+const getPublicDocuments = async (req, res) => {
+  try {
+    const result = await Document.find({ visibility: "public" });
     res.status(200).json(result);
   } catch (e) {
     return res.status(400).json({ status: 400, message: e });
@@ -71,4 +84,10 @@ const deleteDocument = async (req, res) => {
   }
 };
 
-export { uploadFile, getDocuments, getDocument, deleteDocument };
+export {
+  uploadFile,
+  getDocuments,
+  getDocument,
+  deleteDocument,
+  getPublicDocuments,
+};

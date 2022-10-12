@@ -9,6 +9,7 @@ import { router as userRouter } from "./routes/user.js";
 import { router as documentRouter } from "./routes/document.js";
 import { router as uploadRouter } from "./routes/upload.js";
 import { router as searchRouter } from "./routes/search.js";
+import { router as publicRouter } from "./routes/public.js";
 import { connectDB } from "./db/connect.js";
 import { checkAuth } from "./controllers/auth.js";
 
@@ -41,15 +42,16 @@ app.use(cors(corsOptions));
 
 app.use(express.json());
 
-app.get("/", checkAuth, (req, res) => {
-  res.send("<h1>Document Management System</h1>");
-});
+app.get("/", checkAuth);
 
+app.use("/documents", checkAuth);
+app.use("/user", checkAuth);
 app.use("/api/v1/login", authRouter);
 app.use("/api/v1/user", checkAuth, userRouter);
 app.use("/api/v1/documents", checkAuth, documentRouter);
 app.use("/api/v1/upload", checkAuth, uploadRouter);
 app.use("/api/v1/search", checkAuth, searchRouter);
+app.use("/api/v1/public", checkAuth, publicRouter);
 
 app.use(proxy("http://localhost:1234"));
 
