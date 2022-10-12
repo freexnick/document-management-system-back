@@ -10,6 +10,7 @@ const addUser = async (req, res) => {
 };
 
 const getUsers = async (req, res) => {
+  if (req.session.user?.role !== "admin") return getUser(req, res);
   try {
     const result = await User.find();
     res.status(200).json(result);
@@ -20,7 +21,7 @@ const getUsers = async (req, res) => {
 
 const getUser = async (req, res) => {
   try {
-    const result = await User.findOne({ _id: req.params.id });
+    const result = await User.find({ _id: req.session?.user?._id });
     res.status(200).json(result);
   } catch (e) {
     return res.status(400).json({ status: 400, message: e });
