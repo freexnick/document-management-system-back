@@ -10,7 +10,7 @@ const STORAGE = multer.diskStorage({
     file.originalname = Buffer.from(file.originalname, "latin1").toString(
       "utf8"
     );
-    cb(null, `{${Date.now()}-${req.params.id}-${file.originalname}`);
+    cb(null, `{${Date.now()}-${req.session?.user?._id}-${file.originalname}`);
   },
 });
 
@@ -21,10 +21,8 @@ const upload = multer.default({
 
 const router = express.Router();
 
-router.route("/").get();
-
 router
-  .route("/:id")
+  .route("/")
   .post(upload.single("file"), (req, res) => uploadFile(req, res));
 
 export { router };
