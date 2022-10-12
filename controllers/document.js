@@ -4,7 +4,7 @@ import { Document } from "../models/Document.js";
 import { User } from "../models/User.js";
 
 const uploadFile = async (req, res) => {
-  const fileSize = req.file.size / 1024 ** 2;
+  const fileSize = req.file?.size / 1024 ** 2;
   try {
     const user = await User.findByIdAndUpdate(
       { _id: req.session.user._id },

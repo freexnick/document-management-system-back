@@ -1,6 +1,7 @@
 import express from "express";
 import * as multer from "multer";
 import { uploadFile } from "../controllers/document.js";
+import { checkSpace } from "../controllers/user.js";
 
 const STORAGE = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -16,13 +17,24 @@ const STORAGE = multer.diskStorage({
 
 const upload = multer.default({
   storage: STORAGE,
-  limits: { fieldSize: 25 * 1024 * 1024 },
+  limits: { fileSize: 26214400 },
+  fileFilter: checkSpace,
 });
 
 const router = express.Router();
 
-router
-  .route("/")
-  .post(upload.single("file"), (req, res) => uploadFile(req, res));
+const fileUpload = (req, res, next) => {
+  const fu = upload.single("file");
+  fu(req, res, (err) => {
+    if (err) return res.status(500);
+    if (req.body.error)
+      return res
+        .status(413)
+        .json({ status: 413, message: "not enough space on drive" });
+    next();
+  });
+};
+
+router.route("/").post(fileUpload, (req, res) => uploadFile(req, res));
 
 export { router };

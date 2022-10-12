@@ -49,4 +49,19 @@ const deleteUser = async (req, res) => {
   }
 };
 
-export { addUser, getUser, getUsers, updateUser, deleteUser };
+const checkSpace = async (req, file, cb) => {
+  try {
+    const result = await User.findOne({ _id: req?.session?.user?._id });
+    if (result.spaceUsed + +req.body.size > result.spaceLimit) {
+      req.body.error = true;
+      cb(null, req, file);
+    } else {
+      delete req.body.error;
+      cb(null, req, file);
+    }
+  } catch (e) {
+    return e;
+  }
+};
+
+export { addUser, getUser, getUsers, updateUser, deleteUser, checkSpace };
