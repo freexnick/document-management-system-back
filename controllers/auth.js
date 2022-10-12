@@ -1,6 +1,7 @@
 import { User } from "../models/User.js";
 
 const auth = async (req, res) => {
+  delete req.session?.user;
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
