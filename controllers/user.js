@@ -13,16 +13,27 @@ const getUsers = async (req, res) => {
   if (req.session.user?.role !== "admin") return getUser(req, res);
   try {
     const result = await User.find();
-    res.status(200).json(result);
+    res.status(200).json({
+      status: 200,
+      message: "Success",
+      data: result,
+      requestedBy: req.session.user,
+    });
   } catch (e) {
     return res.status(400).json({ status: 400, message: e });
   }
 };
 
 const getUser = async (req, res) => {
+  const userToFind = req.params?.id || req.session.user?._id;
   try {
-    const result = await User.find({ _id: req.session?.user?._id });
-    res.status(200).json(result);
+    const result = await User.find({ _id: userToFind });
+    res.status(200).json({
+      status: 200,
+      message: "Sucess",
+      data: result,
+      requestedBy: req.session.user,
+    });
   } catch (e) {
     return res.status(400).json({ status: 400, message: e });
   }
@@ -30,10 +41,14 @@ const getUser = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const result = await User.findOneAndUpdate(req.body.email, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const result = await User.findOneAndUpdate(
+      { email: req.body?.email },
+      req.body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
     res.status(200).json(result);
   } catch (e) {
     return res.status(400).json({ status: 400, message: e });
