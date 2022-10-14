@@ -21,9 +21,12 @@ const auth = async (req, res) => {
 const checkAuth = async (req, res, next) =>
   req.session.user ? next() : res.redirect("/login");
 
+const checkRole = async (req, res, next) =>
+  req.session.user?.role === "admin" ? next() : res.redirect("/user");
+
 const logout = async (req, res) => {
-  req.session.destroy();
+  delete req.session.user;
   res.status(200).json({ status: 200, message: "Success" });
 };
 
-export { auth, checkAuth, logout };
+export { auth, checkAuth, logout, checkRole };

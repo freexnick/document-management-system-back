@@ -11,7 +11,7 @@ import { router as uploadRouter } from "./routes/upload.js";
 import { router as searchRouter } from "./routes/search.js";
 import { router as publicRouter } from "./routes/public.js";
 import { connectDB } from "./db/connect.js";
-import { checkAuth } from "./controllers/auth.js";
+import { checkAuth, checkRole } from "./controllers/auth.js";
 
 const PORT = process.env.PORT || 8000;
 const HOST = "localhost";
@@ -46,6 +46,8 @@ app.get("/", checkAuth);
 
 app.use("/documents", checkAuth);
 app.use("/user", checkAuth);
+app.use("/update", checkRole);
+app.use("/public", checkAuth);
 app.use("/api/v1/login", authRouter);
 app.use("/api/v1/user", checkAuth, userRouter);
 app.use("/api/v1/documents", checkAuth, documentRouter);
